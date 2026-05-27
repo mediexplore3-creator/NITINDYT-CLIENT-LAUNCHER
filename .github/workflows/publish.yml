@@ -1,0 +1,20 @@
+name: Publish to Windows Package Manager
+
+on:
+  release:
+    types: [published]
+
+permissions: {}
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - name: Publish to Windows Package Manager
+        run: |
+          echo "Publishing skipped - configure winget-publisher action when ready"
+          # Action would use:
+          # identifier: NitindytClient.NitindytClient
+          # installers-regex: 'NitindytClient-Windows-MSVC(:?-arm64|-Legacy)?-Setup-.+\.exe$'
