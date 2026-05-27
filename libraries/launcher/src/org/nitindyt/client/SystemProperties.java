@@ -52,68 +52,20 @@
  *      limitations under the License.
  */
 
-package org.nitindyt.client.utils;
+package org.nitindyt.client;
 
-import org.nitindyt.client.exception.ParameterNotFoundException;
+import org.nitindyt.client.utils.Parameters;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+public final class SystemProperties {
+    private SystemProperties() {}
 
-public final class Parameters {
-    private final Map<String, List<String>> map = new HashMap<>();
-
-    public void add(String key, String value) {
-        List<String> params = map.get(key);
-
-        if (params == null) {
-            params = new ArrayList<>();
-
-            map.put(key, params);
+    public static void apply(Parameters params) {
+        for (String key : params.getMap().keySet()) {
+            if (key.startsWith("sysProp.")) {
+                String propKey = key.substring("sysProp.".length());
+                String propValue = params.getString(key);
+                System.setProperty(propKey, propValue);
+            }
         }
-
-        params.add(value);
-    }
-
-    public List<String> getList(String key) throws ParameterNotFoundException {
-        List<String> params = map.get(key);
-
-        if (params == null)
-            throw new ParameterNotFoundException(key);
-
-        return params;
-    }
-
-    public List<String> getList(String key, List<String> def) {
-        List<String> params = map.get(key);
-
-        if (params == null || params.isEmpty())
-            return def;
-
-        return params;
-    }
-
-    public String getString(String key) throws ParameterNotFoundException {
-        List<String> list = getList(key);
-
-        if (list.isEmpty())
-            throw new ParameterNotFoundException(key);
-
-        return list.get(0);
-    }
-
-    public String getString(String key, String def) {
-        List<String> params = map.get(key);
-
-        if (params == null || params.isEmpty())
-            return def;
-
-        return params.get(0);
-    }
-
-    public Map<String, List<String>> getMap() {
-        return Collections.unmodifiableMap(map);
     }
 }
